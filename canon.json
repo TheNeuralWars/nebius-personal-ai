@@ -1,0 +1,11 @@
+{
+  "protected_facts": [
+    {"id": 1, "topic": "martin age", "claim": "Martin is 28", "patterns": ["martin"], "must_not_contain": ["19", "nineteen", "19-year", "19 year"]},
+    {"id": 2, "topic": "city age", "claim": "The city is 18 years old (founded 2130)", "patterns": ["city", "founded"], "must_not_contain": ["60 years", "sixty years old"]},
+    {"id": 3, "topic": "user name", "claim": "The user is Nico", "patterns": ["user", "nico"], "must_not_contain": ["jennifer"]}
+  ],
+  "banned_claims": [
+    {"pattern": "lorem ipsum", "reason": "placeholder text leaked into output"},
+    {"pattern": "as an ai", "reason": "no corporate filler voice"}
+  ]
+}
