@@ -1,6 +1,7 @@
 """Persistent JSONL memory with keyword + recency recall."""
 import json
 import os
+import re
 import time
 
 
@@ -24,7 +25,7 @@ class Memory:
         return entry
 
     def recall(self, query, k=3):
-        terms = [t for t in query.lower().split() if len(t) > 2]
+        terms = [t for t in re.findall(r"[a-z0-9]+", query.lower()) if len(t) > 2]
         scored = []
         for e in self.entries:
             text = e["text"].lower()

@@ -1,5 +1,21 @@
+# secrets & local env
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+README-internal.md
+
+# python
 *.pyc
 __pycache__/
-memory.jsonl
 .venv/
+venv/
+
+# runtime data
+memory.jsonl
+*.log
+
+# os
+.DS_Store

@@ -1,14 +1,17 @@
-"""LLM client: mock (offline) or any OpenAI-compatible endpoint (Nebius by default)."""
+"""LLM client: mock (offline) or any OpenAI-compatible endpoint (Nebius Token Factory by default)."""
 import json
 import os
 import urllib.request
 
 DEFAULTS = {
     "mock": {"base_url": "", "model": "mock"},
-    "nebius": {"base_url": "https://api.studio.nebius.ai/v1", "model": os.environ.get("NEBIUS_MODEL", "meta-llama/Meta-Llama-3.1-8B-Instruct")},
+    # Nebius Token Factory (OpenAI-compatible). Override base/model via env.
+    "nebius": {
+        "base_url": "https://api.tokenfactory.nebius.com/v1",
+        "model": os.environ.get("NEBIUS_MODEL", "NousResearch/Hermes-4-405B"),
+    },
     "openai": {"base_url": "https://api.openai.com/v1", "model": os.environ.get("OPENAI_MODEL", "gpt-4o-mini")},
 }
-
 
 class LLM:
     def __init__(self, provider=None):
@@ -25,6 +28,7 @@ class LLM:
             "model": self.model,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
             "temperature": 0.3,
+            "max_tokens": 400,
         }).encode()
         req = urllib.request.Request(
             self.base_url.rstrip("/") + "/chat/completions",

@@ -15,34 +15,40 @@ Personal AI assistants hallucinate about *you*: wrong names, invented dates, con
 3. **Repair loop**: on a violation the agent is asked to fix only the flagged claims; rules re-run; remaining violations are shown to the user (no hidden failures).
 4. **AUTOIMPROVE-lite**: after each task the agent appends a self-critique line to memory, so the same mistake is caught by the guard next time.
 
-## Real results (offline, mock provider)
+## Real results (live, Nebius Token Factory)
 
-Actual run output (`python3 demo.py`, 2026-10-21):
+Actual run output (`./run_live.sh`, 2026-10-22), model **`NousResearch/Hermes-4-405B`** on `https://api.tokenfactory.nebius.com/v1`:
 
 ```
-[1] user task: 'Draft a status line about Martin'
-[1] final: 'Martin (28) shipped the parser today.'  shown=True violations=0
-[2] memory recall('martin age') ->
-    task: Draft a status line about Martin -> answer ok
-    Martin shipped the parser on 2026-10-20
-    Martin is 28 (canon, fixed 2026-10-05)
+=== Scenario 1: answer grounded in persistent memory ===
+[S1] DRAFT: 'Martin, 28, successfully shipped the parser on 2026-10-20.'
+[S1] CanonGuard: 0 violations (clean)  -> shown
+
+=== Scenario 2: messy draft leaks a banned phrase -> guard + repair ===
+[S2] DRAFT: 'As an AI, I am pleased to report that Martin shipped the parser today.'
+[S2] CanonGuard CAUGHT 1 violation: banned claim: no corporate filler voice ('as an ai')
+[S2] FINAL: 'I am pleased to report that Martin shipped the parser today.'  -> shown
 ```
 
-The mock provider deliberately drafts `Martin (19)` first; CanonGuard flags the age violation and the repair pass fixes it to `28` before display (5 unit tests cover this path).
+The agent answers from memory, and CanonGuard both **verifies** clean answers and **repairs** violations before display. `python3 -m unittest discover -s tests -v` → 5 tests, all passing (`OK`).
 
-`python3 -m unittest discover -s tests -v` → 5 tests, all passing (`OK`).
-
-## Run
+## Setup & Run
 
 ```bash
-python3 demo.py                      # offline demo, no API key needed (mock provider)
+# 1) Offline demo (mock provider, no API key needed)
+python3 demo.py
+
+# 2) Tests
 python3 -m unittest discover -s tests -v
 
-# Live LLM (OpenAI-compatible; Nebius AI Studio by default):
-export HERMES_LLM_PROVIDER=nebius
-export NEBIUS_API_KEY=...            # never commit keys; .env is gitignored
-python3 demo.py
+# 3) LIVE demo on Nebius Token Factory (OpenAI-compatible)
+#    Get a key at https://tokenfactory.nebius.com/ then either:
+cp .env.example .env          # and fill in NEBIUS_API_KEY  (gitignored)
+#    or, recommended — load the key from a secure file at runtime (never echoed):
+./run_live.sh                 # reads /data/secrets/nebius_api_key by default
 ```
+
+`run_live.sh` sets `NEBIUS_API_KEY` from a secure file (override path with `NEBIUS_KEY_FILE`) and runs `demo_live.py`. The key is **never** printed or committed. Configuration is via env vars (`HERMES_LLM_PROVIDER`, `HERMES_LLM_MODEL`, `HERMES_LLM_BASE_URL`) — see `.env.example`. Any OpenAI-compatible endpoint works.
 
 ## Architecture
 
@@ -50,12 +56,13 @@ python3 demo.py
 
 ## Responsible use
 
-No API keys in the repo (env vars only). Memory is plain local files — the user owns and can delete it. MIT licensed.
+No API keys in the repo (env vars / a secure key file only). Memory is plain local files — the user owns and can delete it. MIT licensed.
 
 ## Status & next (for Devpost)
 
 - [x] Core loop (memory + CanonGuard + repair) working, tests green
 - [x] Offline demo with recorded output
-- [ ] Live demo on Nebius inference (needs the $25 promo code redeemed — pending login)
-- [ ] 3-min demo video (script + VO)
-- [ ] Public GitHub repo (secret scan first, then Nico's OK to publish)
+- [x] **Live demo on Nebius Token Factory inference** (`NousResearch/Hermes-4-405B`)
+- [x] 3-min demo video script (`VIDEO_SCRIPT.md`)
+- [ ] Record VO / produce the demo video
+- [ ] Publish public GitHub repo (secret scan clean → awaiting maintainer's OK)
