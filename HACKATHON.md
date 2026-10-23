@@ -37,8 +37,8 @@ as hackathon output**. Everything below is the new work.
 | `0cb113a` | 2026-10-23 11:08:45 | feat: NVIDIA Nemotron reasoning core + metered agent integration |
 | `92c51aa` | 2026-10-23 11:11:30 | docs: HACKATHON provenance + SUBMISSION_DRAFT (this file) |
 
-(One follow-up docs commit records this manifest; the branch log is the
-authoritative list.)
+(Follow-up docs commits record this manifest and the secret-scan evidence;
+the branch log is the authoritative list.)
 
 ### 1. Meterless — H-MEM hierarchical memory (new)
 
@@ -91,7 +91,7 @@ or API key) — see the handoff notes for exactly where to obtain them.
 | Unit tests (`python3 -m unittest discover -s tests`) | 15/15 OK (5 pre-existing + 10 new) | `tests/` |
 | Live demo (real Nemotron calls) | complete, guard + H-MEM lifecycle shown | `proofs/hackathon-demo-output.txt` |
 | Nemotron metering receipts | 3 calls, 1141 tokens, $0.00 (free tier) | `proofs/nemotron-receipts.jsonl` |
-| Secret scan (`gitleaks`) | 0 leaks | this log |
+| Secret scan (`gitleaks` 8.30.1, git + dir) | 0 leaks | `proofs/secret-scan.txt` |
 
 Reproduce: `./run_hackathon_demo.sh` (loads the gateway key at runtime, never
 printed) and `HMEM_IMPL=$PWD/hmem/src/index.ts npx tsx hmem/conformance/runner.ts`.
