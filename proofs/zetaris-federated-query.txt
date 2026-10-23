@@ -1,0 +1,73 @@
+=== Zetaris federated SQL proof — real query output (LOCAL mode) ===
+date_utc: 2026-10-23 (runs captured ~12:53-13:06 UTC on the VPS)
+platform: /data/apps/zetaris/zetaris-platform (docker compose, 7 services)
+transports exercised: REST (SQL Query API on 127.0.0.1:8888) and JDBC
+  (jdbc:zetaris:lightning@localhost:10000 via tools/ZetarisJdbcQuery.java +
+   the licensed ndp-jdbc-driver jar, kept outside the repository)
+auth: session JWT from GET /api/v1.0/auth/login / JDBC SASL login as the
+  platform admin (credentials never shown)
+datasets: NY_TAXI (CSV) + TPCDS_DB (Parquet), registered by the platform's
+  sample-data seed ("[bootstrap] sample data registered")
+note: the platform runs emulated (amd64 images on the ARM64 VPS), so queries
+  take seconds to minutes; a heavy full-table aggregate over NY_TAXI.yellow_taxi
+  exceeded the 300s client timeout and is NOT claimed here.
+
+--- REST Query 1: connectivity probe (SQL Query API) ---
+engine: zetaris-lightning-rest  latency_ms: 4816  rows: 1
+sql: select 7 as seven
+
+seven
+7
+
+JSON:
+[
+  {
+    "seven": "7"
+  }
+]
+
+--- REST Query 2: sample rows from NY_TAXI.customers (federated CSV source) ---
+engine: zetaris-lightning-rest  latency_ms: 40441  rows: 3
+sql: SELECT * FROM NY_TAXI.customers LIMIT 3
+
+preferred_payment | first_name | is_active | email | registration_date | total_spent | customer_type | created_at | home_zone_id | updated_at | phone | customer_id | work_zone_id | last_trip_date | total_trips | last_name | rating
+Card | Andrea | True | vvelasquez@example.org | 2018-12-06 | 56455.98 | Corporate | 2022-03-24 01:41:27 | 5110 | 2023-03-06 00:49:51 | (260)528-1694x2048 | 1 | 3750 | 2021-05-15 | 226 | Ford | 2.2
+Cash | Jessica | True | lrobertson@example.com | 2021-07-24 | 10910.14 | Premium | 2025-04-27 13:45:51 | 5007 | 2020-11-10 09:37:52 | 8154842732 | 2 | 7117 | 2021-07-10 | 28 | Ferguson | 2.33
+Cash | John | True | timothyortega@example.org | 2019-02-21 | 71162.48 | Premium | 2025-04-09 13:43:50 | 5234 | 2024-05-19 12:03:09 | 809-711-7760 | 3 | 736 | 2021-12-06 | 762 | Perez | 4.19
+
+--- REST Query 3: TPCDS_DB.item retail dimension (federated Parquet source) ---
+engine: zetaris-lightning-rest  rows: 5 (run completed; tail of real output)
+sql: SELECT i_item_id, i_item_desc, i_current_price FROM TPCDS_DB.item LIMIT 5
+(five rows returned; last rows as captured:)
+  {
+    "i_item_id": "AAAAAAAAEAAAAAAA",
+    "i_item_desc": "Normal systems would join simply different theories. Full, new clothes may eat instead achievements. D",
+    "i_current_price": "4.0"
+  },
+  {
+    "i_item_id": "AAAAAAAAHAAAAAAA",
+    "i_item_desc": "Anxious accounts must catch also years. Revolutionary, large directors used to embrace then mo",
+    "i_current_price": "9.94"
+  },
+  {
+    "i_item_id": "AAAAAAAAIAAAAAAA",
+    "i_item_desc": "F",
+    "i_current_price": "4.46"
+  }
+
+--- JDBC Query 4: same engine through the licensed Lightning JDBC driver ---
+engine: zetaris-lightning-jdbc  latency_ms: 65197  rows: 1
+sql: select 7 as seven
+
+seven
+7
+
+JSON:
+[
+  {
+    "seven": 7
+  }
+]
+
+(helper: tools/ZetarisJdbcQuery.java, single-file source run with a local JDK 21;
+ jar path supplied via ZETARIS_JDBC_JAR, password passed on stdin only)

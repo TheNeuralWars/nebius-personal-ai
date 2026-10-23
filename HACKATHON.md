@@ -67,21 +67,35 @@ the branch log is the authoritative list.)
   request ids, models and latencies in `proofs/nemotron-receipts.jsonl`
   (3 calls in the recorded demo run; no keys).
 
-### 3. Zetaris — federated data layer (PENDING — blocked, see below)
+### 3. Zetaris — federated data layer (new, LANDED)
 
-Planned integration (to land as soon as credentials arrive): the agent's data
-layer registers remote REST/file sources in Zetaris Lightning and answers
-user questions with federated SQL through the Zetaris SQL Query APIs
-(start / page / close), so recalled "facts" can be grounded in federated data
-sources with the result set (only) travelling back. Verification plan: one
-real query against the supplied samples (NY Taxi / TPCDS) recorded in
-`proofs/`.
+The agent's data layer now runs **federated SQL over Zetaris Lightning** on a
+local Zetaris platform install (`/data/apps/zetaris/zetaris-platform`, LOCAL
+mode: everything bound to 127.0.0.1, nothing public):
 
-**Blocker:** no Zetaris credentials exist on the build machine (searched
-`/data/secrets`, `.env` files, Hermes profile envs, shared memory, browser
-vault; no live session at `cloud.enterprise.zetaris.com`). Needed: the
-Zetaris Cloud account (UI URL + numeric organisation ID + account credentials
-or API key) — see the handoff notes for exactly where to obtain them.
+- `zetaris_client.py` — client over the documented SQL Query API (session
+  login → `/api/v1.0/query/sql/start` with page/close pagination), with an
+  optional **JDBC** transport (`jdbc:zetaris:lightning@localhost:10000`, the
+  licensed `ndp-jdbc-driver` via `tools/ZetarisJdbcQuery.java`, a tiny Java
+  helper whose password travels on stdin only). All config via env vars
+  (`ZETARIS_UI_URL`, `ZETARIS_API_URL`, `ZETARIS_USER`,
+  `ZETARIS_PASSWORD[_FILE]`, `ZETARIS_TRANSPORT`, `ZETARIS_JDBC_*`); no
+  secrets and no licensed jar in the repo (gitignored).
+- `zetaris_tool.py` — the real tool the agent uses: `zetaris_federated_sql`
+  runs read-only SQL (planner-guarded: SELECT/WITH only) and `ground()`
+  **joins the result rows with the agent's recalled memory (Meterless H-MEM)**
+  into one provenance-labelled block (SOURCE A = Zetaris rows, SOURCE B =
+  memory) with grounding rules that forbid inventing rows.
+- `planner.py` `decide_federated_query` — **the Nemotron planner decides
+  whether to federate and with which SQL** (catalog-aware prompt over
+  NY_TAXI / TPCDS_DB); `agent.py` executes the tool and grounds the answer,
+  degrading gracefully to memory-only when Zetaris is down.
+- `zetaris_query.py` CLI + `demo_zetaris.py` / `run_zetaris_demo.sh` demo.
+- Verified with real runs: `proofs/zetaris-federated-query.txt` (REST + JDBC
+  query output over NY_TAXI and TPCDS_DB) and `proofs/zetaris-verify.txt`
+  (platform `verify.sh`, 7/9 — the 2 FAILs are the emulated UI's login proxy,
+  not the engine; the direct API login + queries work). Offline tests cover
+  the whole layer with mocks (41/41 in `tests/`).
 
 ## Verification (all real runs, same session)
 
@@ -91,6 +105,8 @@ or API key) — see the handoff notes for exactly where to obtain them.
 | Unit tests (`python3 -m unittest discover -s tests`) | 15/15 OK (5 pre-existing + 10 new) | `tests/` |
 | Live demo (real Nemotron calls) | complete, guard + H-MEM lifecycle shown | `proofs/hackathon-demo-output.txt` |
 | Nemotron metering receipts | 3 calls, 1141 tokens, $0.00 (free tier) | `proofs/nemotron-receipts.jsonl` |
+| Zetaris federated SQL (REST + JDBC, NY_TAXI / TPCDS_DB) | real rows returned | `proofs/zetaris-federated-query.txt` |
+| Zetaris platform `verify.sh` | 7/9 (2 FAILs = emulated UI proxy, engine healthy) | `proofs/zetaris-verify.txt` |
 | Secret scan (`gitleaks` 8.30.1, git + dir) | 0 leaks | `proofs/secret-scan.txt` |
 
 Reproduce: `./run_hackathon_demo.sh` (loads the gateway key at runtime, never
@@ -107,4 +123,6 @@ printed) and `HMEM_IMPL=$PWD/hmem/src/index.ts npx tsx hmem/conformance/runner.t
       `hackathon/open-agent` (push pending — not pushed yet).
 - [x] Clear explanation of sponsor integration + what is unique
       (`HACKATHON.md` this file).
-- [ ] Zetaris integration landed + verified (blocked on credentials).
+- [x] Zetaris integration landed + verified (local platform, real query
+      output in `proofs/zetaris-*.txt`); demo segment scripted in
+      `SUBMISSION_DRAFT.md`.

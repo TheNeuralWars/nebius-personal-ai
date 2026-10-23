@@ -65,10 +65,16 @@ before they are ever shown. For the hackathon we extended it with:
    generator too. Every call is metered with append-only receipts (request id,
    model, latency, tokens — never credentials): the agent knows what it spent.
 
-3. **Zetaris (data).** [TO LAND BEFORE SUBMISSION — blocked on credentials:
-   the agent's data layer will register sources in Zetaris Lightning and ground
-   answers in federated SQL (Zetaris SQL Query APIs), with only result sets
-   travelling back.]
+3. **Zetaris (data).** New: the agent's data layer runs **federated SQL over
+   Zetaris Lightning** (local Zetaris platform, LOCAL mode, loopback only).
+   The Nemotron planner decides whether to federate and with which SQL over
+   the registered sample datasets (NY_TAXI, TPCDS_DB); a real tool executes
+   it (SQL Query API, or JDBC via a tiny Java helper and the licensed
+   Lightning driver) and **joins the result rows with the agent's Meterless
+   H-MEM memories** in one provenance-labelled grounding block, so every
+   statement can cite Zetaris data, memory, or flag a conflict. Read-only SQL
+   only; only result rows travel back. Real query output in
+   `proofs/zetaris-federated-query.txt`.
 
 **Why the sponsor tech is used this way (uniqueness).** Meterless is not a
 drop-in library — it is a spec with a conformance suite, so we implemented the
@@ -82,9 +88,9 @@ answering, and the memory system audits and meters everything it does.
 live demo transcript with real Nemotron request ids and latencies
 (`proofs/`).
 
-**Future work.** Zetaris-federated grounding; dream insights on a schedule;
-multi-user canon profiles; serving the same loop over an OpenAI-compatible
-endpoint so any app can use it.
+**Future work.** Dream insights on a schedule; multi-user canon profiles;
+serving the same loop over an OpenAI-compatible endpoint so any app can use
+it; registering custom remote sources in Zetaris beyond the sample datasets.
 
 ## Tech used
 
@@ -92,7 +98,8 @@ endpoint so any app can use it.
 - TypeScript (Node >= 22.18, no build step) — Meterless H-MEM engine
 - NVIDIA Nemotron 3 Ultra (550B A55B, free tier) via the OmniRoute gateway
 - Meterless H-MEM spec + conformance suite (Apache-2.0, vendored runner)
-- [pending] Zetaris Lightning (federated SQL, SQL Query APIs)
+- Zetaris Lightning (federated SQL over NY_TAXI / TPCDS_DB — SQL Query API
+  + JDBC driver; local platform install, loopback only)
 - JSONL metering receipts (append-only)
 
 ## Sponsor usage summary (form field)
@@ -106,7 +113,11 @@ endpoint so any app can use it.
   drafter, and demo generator — every call metered with request-id-level
   receipts. Unique: Nemotron is the *step before* the answer, inside a
   guarded loop, not a chat endpoint.
-- **Zetaris:** [pending — see long description].
+- **Zetaris:** the federated data layer: the Nemotron planner decides the
+  federation, the tool runs read-only SQL over the sample datasets and joins
+  the rows with H-MEM memory under explicit provenance rules. Unique: data
+  grounding with a memory join inside a canon-guarded loop, with only result
+  rows travelling back.
 
 ## Demo / video script notes (target: 3 min 30 s)
 
@@ -122,8 +133,11 @@ endpoint so any app can use it.
    (Nemotron drafts the insight) → approval creates a long_term memory with
    lineage → sleep cycle archives the stale note, protects the derived one.
    Conformance scorecard 13/13 on screen.
-4. (2:10–2:50) Metering receipts: 3 Nemotron calls, ids + latencies + $0.00.
-   [Zetaris segment: one federated query, result rows on screen — pending.]
+4. (2:10–2:50) Zetaris federated segment: the Nemotron planner picks the SQL
+   over NY_TAXI/TPCDS_DB → real result rows on screen
+   (`proofs/zetaris-federated-query.txt`) → the grounding block joins those
+   rows with an H-MEM memory, provenance-labelled → metering receipts: 3
+   Nemotron calls, ids + latencies + $0.00.
 5. (2:50–3:30) Architecture diagram + sponsor logos + what's next.
 
 AI-generated media in the submission carries the platform's AI label.
@@ -137,8 +151,8 @@ AI-generated media in the submission carries the platform's AI label.
 
 ## Checklist of missing items
 
-- [ ] Zetaris credentials → land + verify the federated query component
-      (BLOCKER; mandatory sponsor integration).
+- [x] Zetaris federated query component landed + verified
+      (`proofs/zetaris-*.txt`; local platform install, loopback only).
 - [ ] Push `hackathon/open-agent` (not pushed yet, by instruction).
 - [ ] Record the 1–4 min demo video (script above).
 - [ ] Build the slide deck (structure in the long description).

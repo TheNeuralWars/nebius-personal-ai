@@ -13,11 +13,49 @@ Configuration (all optional, no secrets in code or logs):
 """
 import json
 import os
+import re
 import time
 import urllib.request
 
+from zetaris_tool import CATALOG_HINT
+
 DEFAULT_MODEL = "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free"
 RECEIPT_VERSION = "meterless-receipt-v1"
+
+FEDERATION_SYSTEM = (
+    "You are the reasoning core of a personal AI agent that owns a federated data tool "
+    "(Zetaris Lightning, Spark SQL over the catalog below). Decide whether answering the "
+    "task needs live federated data from that catalog (anything about taxi trips, zones, "
+    "customers or TPC-DS retail data), or whether the recalled memories alone suffice. "
+    "If data is needed, output exactly one line:\n"
+    "FEDERATED_SQL: <one read-only SELECT (Spark SQL)>\n"
+    "If not, output exactly:\n"
+    "NO_FEDERATION\n"
+    "No preamble, no other text."
+)
+
+_FORBIDDEN_SQL = (
+    "insert", "update", "delete", "drop", "create", "alter", "grant", "merge",
+    "truncate", "copy", "call", "set", "use",
+)
+
+
+def parse_federated_decision(text):
+    """Extract a read-only federated SQL statement from the planner's decision, else None."""
+    if not text:
+        return None
+    for line in text.splitlines():
+        line = line.strip()
+        if line.upper().startswith("FEDERATED_SQL:"):
+            sql = line.split(":", 1)[1].strip().strip("`").strip()
+            if not sql:
+                return None
+            if not (sql.upper().startswith("SELECT") or sql.upper().startswith("WITH")):
+                return None
+            if any(re.search(r"\b" + kw + r"\b", sql, re.IGNORECASE) for kw in _FORBIDDEN_SQL):
+                return None
+            return sql
+    return None
 
 
 class MeteringLog:
@@ -110,3 +148,19 @@ class NemotronPlanner:
             "Return one sentence stating the pattern or invariant, no preamble."
         )
         return self.complete(system, "MEMORIES:\n- " + "\n- ".join(memory_texts), purpose="dream_insight")
+
+    def decide_federated_query(self, task, context):
+        """Decide whether the Zetaris federated-SQL tool is needed, and with which SQL.
+
+        Returns the read-only SQL to run, or None when memories alone suffice.
+        The tool itself lives in zetaris_tool.ZetarisFederatedTool; the agent
+        executes the returned SQL and grounds the answer with the rows.
+        """
+        system = FEDERATION_SYSTEM + "\n\nCATALOG:\n" + CATALOG_HINT
+        decision = self.complete(
+            system,
+            f"TASK: {task}\n\nRECALLED MEMORIES:\n{context}",
+            purpose="federated_tool",
+            max_tokens=200,
+        )
+        return parse_federated_decision(decision)
