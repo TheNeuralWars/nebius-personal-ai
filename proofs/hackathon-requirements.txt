@@ -1,0 +1,66 @@
+# Open Agent Hackathon 2026 — official rules extract (sections 01-10)
+# Source: https://hackathon.genai.works/event/open-agent-hackathon-2026 (embedded payload, 2026-10-23)
+
+
+## 1 Eligibility
+- Eligibility
+- Open worldwide to anyone aged 16 or older at the start of the build window.
+- Employees of the organizer and of judging sponsors may participate but are not eligible for cash prizes.
+- One account per participant. Duplicate accounts disqualify the whole team.
+
+## 2 Teams
+- Teams of one to five people. Solo entries compete in the same pool as teams.
+- Team composition locks when your first submission is created; before that you may join, leave or merge freely.
+- A participant may belong to exactly one team. Mentors may advise any number of teams.
+
+## 3 Tracks
+- There are three challenge tracks plus the Wildcard [Tinkerer] bonus track.
+- Every submission selects exactly one primary track, which determines the judging panel and the prizes it competes for.
+- You may change track any time before the submission deadline from your team workspace.
+- Cross-track relevance is welcome but is not scored twice.
+
+## 4 Build window
+- Build window
+- Building starts 22 October 2026 at 00:00 UTC and ends 27 October 2026 at 23:45 UTC.
+- Work committed before the window opens is not eligible, except for clearly declared pre-existing components.
+- Time zones do not extend the window; all deadlines are UTC.
+
+## 5 What you can use
+- What you can use
+- Every submission must integrate Zetaris and Meterless. Using Cursor for development is optional.
+- Integrate NVIDIA technology wherever it contributes to your project, workflow or use case.
+- Any language, framework, model or cloud, including closed-source APIs and sponsor credits.
+- Pre-existing open-source libraries are fine. Pre-existing product code must be declared in the submission form.
+- Generated code is allowed and expected, you own the result and are accountable for it.
+
+## 6 Submission requirements
+- Submission requirements
+- A demo video of 1-4 minutes that shows the main workflow, how the agent solves the selected challenge, its key features, and how Zetaris and Meterless are integrated.
+- A slide deck covering the problem and target users, the solution, the agent workflow or architecture, the technical stack, how Zetaris and Meterless were used, what was unique about your use of the sponsor technologies, product visuals, and future enhancements.
+- A GitHub repository with all source code and a README covering setup, usage and dependencies. If your agents run in Google Colab, include the Colab links.
+- A clear explanation of how Zetaris and Meterless were integrated, how Cursor was used during development (if you used it), where NVIDIA technology contributes, and what was unique about your use of the sponsor technologies.
+
+## 7 Judging
+- Scoring out of 100: Impact 30, Technical 20, Innovation 15, Demo 15, Product & UX 10, Sponsor tech 10.
+- Each submission is reviewed by at least three judges.
+- Ties are resolved on the Impact score, then on submission timestamp.
+
+## 8 Prizes
+- Up to $20,000 in total prize value: $13,000 in cash prizes and $7,000 in in-kind rewards for selected winners.
+- Cash prizes per track (1st / 2nd / 3rd): Solving Fragmented Intelligence $1,600 / $1,200 / $900; The Agent That Can Explain Why $1,600 / $1,200 / $900; Reasoning Architecture $1,500 / $1,200 / $900; Wildcard [Tinkerer] $1,000 / $600 / $400.
+- In-kind rewards: Best use of NVIDIA Nemotron - NVIDIA DGX Spark AI Supercomputer (Founder's Edition), $4,699.
+- Cash prizes are paid by bank transfer within 30 days of the results announcement.
+- Cash prizes are split equally among team members unless the team submits a different split in writing.
+- Taxes and any local charges are the recipient's responsibility.
+
+## 9 Intellectual property
+- Intellectual property
+- You keep all rights to what you build. Nothing here transfers ownership to the organizer or sponsors.
+- By submitting you grant the organizer a license to show your demo, screenshots and description in event coverage.
+- Sponsor-track submissions grant that sponsor the same non-exclusive promotional license.
+
+## 10 Schedule \u0026 changes
+- Schedule & changes
+- The organizer may adjust the schedule for technical reasons; changes are announced on this page and in Discord.
+- Disqualification decisions are final and are communicated with a reason to the team lead.
+- Questions go to hackathons@genai.works - expect a reply within one working day.
