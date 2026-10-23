@@ -35,7 +35,10 @@ as hackathon output**. Everything below is the new work.
 |---|---|---|
 | `fd0c756` | 2026-10-23 11:08:31 | feat: Meterless H-MEM memory engine, 13/13 conformance |
 | `0cb113a` | 2026-10-23 11:08:45 | feat: NVIDIA Nemotron reasoning core + metered agent integration |
-| (docs commit) | 2026-10-23 | this file + SUBMISSION_DRAFT.md + README section |
+| `92c51aa` | 2026-10-23 11:11:30 | docs: HACKATHON provenance + SUBMISSION_DRAFT (this file) |
+
+(One follow-up docs commit records this manifest; the branch log is the
+authoritative list.)
 
 ### 1. Meterless — H-MEM hierarchical memory (new)
 
