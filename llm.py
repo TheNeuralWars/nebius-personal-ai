@@ -9,7 +9,7 @@ DEFAULTS = {
     # Nebius Token Factory (OpenAI-compatible). Override base/model via env.
     "nebius": {
         "base_url": "https://api.tokenfactory.nebius.com/v1",
-        "model": os.environ.get("NEBIUS_MODEL", "NousResearch/Hermes-4-405B"),
+        "model": os.environ.get("NEBIUS_MODEL", "nvidia/nemotron-3-super-120b-a12b"),
     },
     # NVIDIA Nemotron via the local OmniRoute gateway (free tier slug).
     "nemotron": {
