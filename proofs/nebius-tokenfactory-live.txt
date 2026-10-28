@@ -1,0 +1,31 @@
+=== Nebius Token Factory live smoke — 2026-10-28T13:47:01Z (key redacted) ===
+HTTP 200 in 1.009345s
+id: chatcmpl-83cf672f9fc7f82e
+model: nvidia/nemotron-3-super-120b-a12b
+usage: {'completion_tokens': 120, 'prompt_tokens': 31, 'total_tokens': 151, 'completion_tokens_details': {'accepted_prediction_tokens': None, 'audio_tokens': None, 'reasoning_tokens': 120, 'rejected_prediction_tokens': None}, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0, 'created_cache_tokens': 0, 'multimodal_tokens': None}, 'prompt_cache_hit_tokens': 0, 'prompt_cache_miss_tokens': 31}
+answer: 
+
+=== demo_live.py on Token Factory ===
+Hermes Personal AI — LIVE demo | provider=nebius model=nvidia/nemotron-3-super-120b-a12b
+
+=== Scenario 1: answer grounded in persistent memory ===
+
+[S1] DRAFT from model:
+    '\n\nAs of October\u202f20\u202f2026, 28‑year‑old Martin has successfully shipped the parser.'
+[S1] CanonGuard: 0 violations (clean)
+[S1] FINAL shown=True (unrepaired violations left: 0):
+    '\n\nAs of October\u202f20\u202f2026, 28‑year‑old Martin has successfully shipped the parser.'
+
+=== Scenario 2: messy draft leaks a banned phrase -> guard + repair ===
+
+[S2] DRAFT from model:
+    "\n\nAs an AI, I'm pleased to report that Martin shipped the parser today."
+[S2] CanonGuard CAUGHT 1 violation(s) in the draft:
+    - banned claim: no corporate filler voice ('as an ai')
+[S2] FINAL shown=True (unrepaired violations left: 0):
+    "\n\nI'm pleased to report that Martin shipped the parser today."
+
+=== memory recall('martin age') ===
+    Martin shipped the parser on 2026-10-20
+    Martin is 28 (canon, fixed 2026-10-05)
+    task: Draft a one-line status about Martin. -> answer ok

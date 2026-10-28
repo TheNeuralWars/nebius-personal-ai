@@ -1,0 +1,58 @@
+=== demo_hackathon.py — planner+generator on Nebius Token Factory (nvidia/nemotron-3-super-120b-a12b) — 2026-10-28T13:48:44Z ===
+Nemotron reasoning core: nvidia/nemotron-3-super-120b-a12b @ https://api.tokenfactory.nebius.com/v1
+
+=== A1. H-MEM capture with provenance + hybrid recall ===========
+captured: ['mem-1', 'mem-2', 'mem-3']
+  mem-2 score=0.346 layer=short_term conf=0.8 origin=manual
+     Martin shipped the parser on 2026-10-20
+  mem-1 score=0.345 layer=short_term conf=0.8 origin=manual
+     Martin is 28 (canon, fixed 2026-10-05)
+  mem-3 score=0.064 layer=short_term conf=0.8 origin=user_correction
+     Nico prefers concise status lines
+trace: "hybrid ranking over 3 memories (query domain: personal:identity)"
+
+=== A2. feedback loop (H-MEM spec 9.2) + audit ledger ===========
+feedback helpful on mem-2: confidence 0.8 -> 0.8500000000000001, accessCount 1
+ledger actions: ['create', 'read', 'read', 'feedback']
+
+=== A3. conflict detection + gated auto-resolution (spec 10) ====
+  conflict-1: opposing phrase pair on similar content (confidence 0.80)
+autoResolve outcome: resolved
+records after resolution: 5 (nothing deleted)
+
+=== A4. dreaming: Nemotron drafts the insight, H-MEM governs approval 
+proposals: [('dream-1', 'insight'), ('dream-2', 'insight'), ('dream-3', 'invariant'), ('dream-4', 'invariant'), ('dream-5', 'invariant')]
+store size unchanged before approval: 7
+Nemotron-drafted insight: The system retains mutually exclusive claims—such as both “always” and “never” enabling telemetry—within the same knowledge domain, revealing an inherent tolerance for contradictory information.
+approved -> mem-8 layer=long_term derivedFrom=['mem-1', 'mem-2'] origin=dream
+
+=== A5. sleep cycle with guardrails (injected clock, +40 days) ==
+toArchive: ['mem-1'] (plain expected, derived protected)
+store before execute: 2
+sleep report: {"backupId": "backup-1", "consolidated": 2, "archived": 1, "synthesized": 0}
+store after execute: 1 (derived survived guardrails)
+
+=== B. full agent loop: H-MEM recall + Nemotron plan + Nemotron generation 
+planner model: nvidia/nemotron-3-super-120b-a12b
+task: Draft a one-line status about Martin: his age and what he shipped.
+PLAN (Nemotron):
+  1. Retrieve Martin's age and shipping detail from the recalled memories.  
+2. Compose a one‑line statement that includes both his age and what he shipped.  
+3. Verify the statement against the recalled facts to ensure accuracy.  
+
+Facts the answer must respect:  
+-
+draft: Martin, 28, shipped the parser on 2026‑10‑20.
+final shown: True | answer: Martin, 28, shipped the parser on 2026‑10‑20.
+part B metering: {"calls": 2, "total_tokens": 701, "total_latency_ms": 3132, "total_cost_usd": 0.0, "models": ["nvidia/nemotron-3-super-120b-a12b"]}
+receipts file: proofs/nemotron-receipts.jsonl
+
+metering receipts file: 6 calls, 2216 tokens, 30284 ms total, $0.00 (free tier)
+  gen-1792753611-KC7zCP97lp2elGo87sK0 | nvidia/nemotron-3-ultra-550b-a55b:free | dream_insight | 14708 ms | 415 tok
+  gen-1792753627-DQwZaZJG7kDIUpUxD6Tx | nvidia/nemotron-3-ultra-550b-a55b:free | plan | 7019 ms | 421 tok
+  gen-1792753634-M4RKjDSoXBTUtoBIrP10 | nvidia/nemotron-3-ultra-550b-a55b:free | generate:nemotron | 2271 ms | 305 tok
+  chatcmpl-8264fd7d38c8005e | nvidia/nemotron-3-super-120b-a12b | dream_insight | 3154 ms | 374 tok
+  chatcmpl-a19d9a127ea1d146 | nvidia/nemotron-3-super-120b-a12b | plan | 2000 ms | 421 tok
+  chatcmpl-adaeff3460182aa6 | nvidia/nemotron-3-super-120b-a12b | generate:nemotron | 1132 ms | 280 tok
+
+DEMO COMPLETE — all output above is real.

@@ -1,0 +1,20 @@
+{
+    "task": "Draft a one-line status about Martin.",
+    "draft": "Martin, aged 28, successfully shipped the parser on\u202fOctober\u202f20,\u202f2026.",
+    "caught": [],
+    "final": "Martin, aged 28, successfully shipped the parser on\u202fOctober\u202f20,\u202f2026.",
+    "shown": true,
+    "unrepaired": 0,
+    "receipts": [
+        {
+            "request_id": "chatcmpl-87317daeaa23a133",
+            "model": "nvidia/nemotron-3-super-120b-a12b",
+            "latency_ms": 1341,
+            "purpose": "generate:nebius",
+            "prompt_tokens": 84,
+            "completion_tokens": 111
+        }
+    ],
+    "provider": "Nebius Token Factory",
+    "model": "nvidia/nemotron-3-super-120b-a12b"
+}

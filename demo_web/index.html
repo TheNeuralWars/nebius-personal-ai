@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hermes Personal AI — live on Nebius Token Factory + NVIDIA Nemotron</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;max-width:860px;margin:2rem auto;padding:0 1rem;background:#0b0f14;color:#e6edf3}
+h1{font-size:1.6rem;margin:.2rem 0}.sub{color:#8b949e}button{background:#76b900;color:#000;border:0;padding:.6rem 1rem;border-radius:6px;font-weight:600;cursor:pointer;margin:.2rem}
+button:disabled{opacity:.5}input{width:70%;padding:.5rem;border-radius:6px;border:1px solid #30363d;background:#0d1117;color:#e6edf3}
+pre{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:1rem;white-space:pre-wrap;overflow:auto}.ok{color:#76b900}.bad{color:#f85149}a{color:#58a6ff}
+.badge{display:inline-block;border:1px solid #30363d;border-radius:99px;padding:.1rem .6rem;margin:.1rem;font-size:.85rem}</style></head><body>
+<h1>Hermes Personal AI</h1><div class="sub">the personal agent that remembers <i>why</i> it knows · Nebius × NVIDIA Global AI Hackathon — Personal AI track</div>
+<p><span class="badge">Runtime: Nebius Token Factory</span><span class="badge">Model: nvidia/nemotron-3-super-120b-a12b</span><span class="badge">CanonGuard repair loop</span><span class="badge">Metered receipts</span></p>
+<p>Each button runs the real agent loop live: recall memory → generate with NVIDIA Nemotron on Nebius Token Factory → CanonGuard checks the draft against protected facts → repair if needed → show. No login. Runs are rate-limited to protect credits.</p>
+<button onclick="go('grounded')">▶ Grounded answer from memory</button>
+<button onclick="go('repair')">▶ Bad draft → CanonGuard repair</button>
+<p><input id="q" maxlength="200" placeholder="Or ask about Martin (max 200 chars)…"><button onclick="go('custom')">Ask</button></p>
+<pre id="out">Click a button to run a live Nemotron call…</pre>
+<p class="sub">Recorded proof run: <a href="proof">proof (Token Factory HTTP 200 + demo transcript)</a> · Code: <a href="https://github.com/TheNeuralWars/nebius-personal-ai">github.com/TheNeuralWars/nebius-personal-ai</a></p>
+<script>
+async function go(s){const o=document.getElementById('out');document.querySelectorAll('button').forEach(b=>b.disabled=true);o.textContent='Calling Nebius Token Factory (NVIDIA Nemotron)…';
+try{const r=await fetch('api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:s,question:document.getElementById('q').value})});const j=await r.json();
+if(!r.ok){o.innerHTML='<span class="bad">'+(j.error||r.status)+'</span>';return}
+let t='TASK: '+j.task+'\n\nDRAFT from '+j.model+' ('+j.provider+'):\n  '+j.draft+'\n\n';
+t+=j.caught.length?'CanonGuard CAUGHT '+j.caught.length+' violation(s):\n'+j.caught.map(v=>'  - '+v.rule+': '+v.detail).join('\n')+'\n\n':'CanonGuard: 0 violations (clean)\n\n';
+t+='FINAL (shown='+j.shown+', unrepaired='+j.unrepaired+'):\n  '+j.final+'\n\nRECEIPTS (no credentials):\n'+j.receipts.map(x=>'  '+x.request_id+' · '+x.model+' · '+x.latency_ms+' ms · '+x.prompt_tokens+'+'+x.completion_tokens+' tok').join('\n');
+o.textContent=t}catch(e){o.innerHTML='<span class="bad">'+e+'</span>'}finally{document.querySelectorAll('button').forEach(b=>b.disabled=false)}}
+</script></body></html>

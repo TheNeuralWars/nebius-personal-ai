@@ -25,7 +25,7 @@ def show(tag, out):
     print(f"[{tag}] FINAL shown={out['shown']} (unrepaired violations left: {len(out['violations'])}):\n    {out['answer']!r}")
 
 def main():
-    model = os.environ.get("HERMES_LLM_MODEL", "NousResearch/Hermes-4-405B")
+    model = os.environ.get("HERMES_LLM_MODEL", "nvidia/nemotron-3-super-120b-a12b")
     provider = os.environ.get("HERMES_LLM_PROVIDER", "nebius")
     print(f"Hermes Personal AI — LIVE demo | provider={provider} model={model}")
 
