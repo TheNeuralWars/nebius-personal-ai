@@ -24,7 +24,7 @@ Solo — Nico (GoalWorld / TheNeuralWars).
 - Live demo (no login, HTTPS): **https://goalworld.fun/hermes-demo/**
 - Recorded proof of a live run: https://goalworld.fun/hermes-demo/proof
 - Code: https://github.com/TheNeuralWars/nebius-personal-ai
-- Video (<3 min, YouTube): `<YOUTUBE_URL — to be filled after upload>`
+- Video (<3 min, YouTube): https://youtu.be/4PknV8iASQQ
 
 ## Short description
 
