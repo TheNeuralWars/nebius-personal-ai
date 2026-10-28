@@ -1,0 +1,17 @@
+Zetaris platform -- verify
+==========================
+
+  PASS  postgres: running (healthy)
+  PASS  driver: running (healthy)
+  PASS  api: running (healthy)
+  PASS  ui: running (healthy)
+  PASS  init: completed (exit 0 -- this is correct for a one-shot job)
+  PASS  bootstrap: completed (exit 0 -- this is correct for a one-shot job)
+  PASS  ui responding (/api/config 200)
+  FAIL  login as admin@zetaris.com returned no token
+        -> check ZETARIS_ADMIN_PASSWORD in .env matches what bootstrap created
+        -> docker compose logs driver | grep -i organisation
+  FAIL  query skipped (no login token)
+
+2 of 9 checks failed.
+Quote the FAIL lines above when asking for help.

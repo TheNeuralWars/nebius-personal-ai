@@ -32,6 +32,29 @@ Actual run output (`./run_live.sh`, 2026-10-22), model **`NousResearch/Hermes-4-
 
 The agent answers from memory, and CanonGuard both **verifies** clean answers and **repairs** violations before display. `python3 -m unittest discover -s tests -v` → 5 tests, all passing (`OK`).
 
+## Open Agent Hackathon 2026 extension (branch `hackathon/open-agent`)
+
+This project was brought to the **Wildcard [Tinkerer]** track of the
+[Open Agent Hackathon 2026](https://hackathon.genai.works/event/open-agent-hackathon-2026)
+and extended with sponsor technology (new work only — see `HACKATHON.md` for
+the pre-existing vs new provenance):
+
+- **Meterless H-MEM** (`hmem/`): hierarchical memory engine implemented from
+  Meterless's H-MEM spec — provenance, hybrid retrieval ranking, feedback
+  deltas, 17-action audit ledger, sleep/dream cycles, conflict resolution.
+  **13/13 checks pass** on Meterless's own conformance suite
+  (`proofs/meterless-hmem-conformance.txt`).
+- **NVIDIA Nemotron** (`planner.py`): the agent's reasoning core — plans every
+  task over recalled memories before answering and drafts the dream insights
+  its memory later approves. Free tier (`nemotron-3-ultra-550b-a55b:free`),
+  every call metered with append-only receipts (`proofs/nemotron-receipts.jsonl`).
+- **Zetaris** (federated data layer): pending sponsor credentials — planned
+  integration documented in `HACKATHON.md`.
+
+Run the live extension demo (needs the local OmniRoute gateway; the key is
+loaded at runtime and never printed): `./run_hackathon_demo.sh`.
+Submission draft: `SUBMISSION_DRAFT.md`.
+
 ## Setup & Run
 
 ```bash

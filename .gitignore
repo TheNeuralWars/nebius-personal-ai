@@ -4,8 +4,15 @@
 !.env.example
 *.pem
 *.key
+*.der
+*.jks
 secrets/
 README-internal.md
+
+# zetaris: licensed driver jar + compiled JDBC helper (never committed)
+*.jar
+*.class
+jdbc/
 
 # python
 *.pyc

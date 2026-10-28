@@ -1,0 +1,15 @@
+{
+  "name": "nebius-hmem",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "H-MEM hierarchical memory engine (Meterless H-MEM spec) for the Nebius Personal AI agent",
+  "license": "Apache-2.0",
+  "scripts": {
+    "conformance": "tsx conformance/runner.ts",
+    "cli": "node src/cli.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
+  }
+}
