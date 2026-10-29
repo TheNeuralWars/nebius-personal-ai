@@ -4,6 +4,19 @@
 
 A personal AI agent that never breaks its own canon. `hermes-personal-ai` is the open-source core of the **Hermes agent fleet** (10 role profiles running 24/7 on a VPS): it answers with persistent memory and — the part that makes it *personal* — a **CanonGuard** that verifies every generated answer against the user's own ground truth before it is shown, and repairs it when it drifts.
 
+
+[![Live demo](https://img.shields.io/badge/demo-live-brightgreen)](https://goalworld.fun/hermes-demo/) [![Video](https://img.shields.io/badge/video-YouTube-red)](https://youtu.be/4PknV8iASQQ) [![Runtime](https://img.shields.io/badge/runtime-Nebius%20Token%20Factory-blue)](https://api.tokenfactory.nebius.com) [![Model](https://img.shields.io/badge/model-NVIDIA%20Nemotron%203%20Super-76B900)](#) [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
+
+## At a glance (for judges)
+
+- **Try it (no login):** https://goalworld.fun/hermes-demo/ · recorded proof run: https://goalworld.fun/hermes-demo/proof
+- **Video (<3 min):** https://youtu.be/4PknV8iASQQ
+- **Runtime:** every demo call goes to Nebius Token Factory; default model **** (see ). Token Factory request ids are printed in the demo and logged in .
+- **What to watch for:** a draft that leaks "As an AI..." gets caught by CanonGuard and repaired before you see it.
+- **Evidence:** , , .
+
+> Note: the "Real results" log below is an earlier run (2026-10-22) on , also on Token Factory. The current default is NVIDIA Nemotron 3 Super.
+
 ## Problem
 
 Personal AI assistants hallucinate about *you*: wrong names, invented dates, confident fiction about your own life. On a team of autonomous agents this gets worse — every agent can invent its own version of the truth.
