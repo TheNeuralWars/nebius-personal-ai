@@ -13,9 +13,9 @@ A personal AI agent that never breaks its own canon. `hermes-personal-ai` is the
 - **Video (<3 min):** https://youtu.be/4PknV8iASQQ
 - **Runtime:** every demo call goes to Nebius Token Factory; default model **** (see ). Token Factory request ids are printed in the demo and logged in .
 - **What to watch for:** a draft that leaks "As an AI..." gets caught by CanonGuard and repaired before you see it.
-- **Evidence:** , , .
+- **Evidence:** `proofs/nebius-tokenfactory-live.txt`, `proofs/hackathon-demo-tokenfactory.txt`, `proofs/nemotron-receipts.jsonl`.
 
-> Note: the "Real results" log below is an earlier run (2026-10-22) on , also on Token Factory. The current default is NVIDIA Nemotron 3 Super.
+> Note: the "Real results" log below is an earlier run (2026-10-22) on `NousResearch/Hermes-4-405B`, also on Token Factory. The current default is NVIDIA Nemotron 3 Super.
 
 ## Problem
 
