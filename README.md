@@ -11,7 +11,7 @@ A personal AI agent that never breaks its own canon. `hermes-personal-ai` is the
 
 - **Try it (no login):** https://goalworld.fun/hermes-demo/ · recorded proof run: https://goalworld.fun/hermes-demo/proof
 - **Video (<3 min):** https://youtu.be/4PknV8iASQQ
-- **Runtime:** every demo call goes to Nebius Token Factory; default model **** (see ). Token Factory request ids are printed in the demo and logged in .
+- **Runtime:** every demo call goes to Nebius Token Factory; default model **`nvidia/nemotron-3-super-120b-a12b`** (see `llm.py`). Token Factory request ids are printed in the demo and logged in `proofs/`.
 - **What to watch for:** a draft that leaks "As an AI..." gets caught by CanonGuard and repaired before you see it.
 - **Evidence:** `proofs/nebius-tokenfactory-live.txt`, `proofs/hackathon-demo-tokenfactory.txt`, `proofs/nemotron-receipts.jsonl`.
 
